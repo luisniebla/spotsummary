@@ -3,3 +3,5 @@ api/.venv
 .venv/
 nextapp/node_modules
 nextapp/.next
+config.dev
+.env
