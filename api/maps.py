@@ -1,14 +1,41 @@
 # google maps api
 
 import json
-
+import geopy
 import requests
+import firebase_admin
+from firebase_admin import firestore
+from firebase_admin import credentials
+
+
+cred = credentials.ApplicationDefault()
+app = firebase_admin.initialize_app(cred)
+db = firestore.client()
+
+# Use a service account.
+cred = credentials.Certificate('path/to/serviceAccount.json')
+
+app = firebase_admin.initialize_app(cred)
+
+db = firestore.client()
+
+doc_ref = db.collection('location').document('alovelace')
+doc_ref.set({
+    'name': "Connolly's",
+    'opening_hours': {'open_now': True},
+})
+
 from dotenv import dotenv_values, load_dotenv
 
 load_dotenv()
 config = dotenv_values('.env')
 api_key = config['MAPS_API_KEY']
 
+def get_current_location(address):
+    location = geopy.geocoders.Nominatim(user_agent='spotsum').geocode(address)
+    return [location.latitude, location.longitude]
+
+# 
 
 def get_place_info(api_key, place_id):
     # Define the Places API endpoint
@@ -27,7 +54,9 @@ def get_place_info(api_key, place_id):
         return None
 
 
-def search_places(location, radius=500, place_type='restaurant'):
+def search_places(address, radius=500, place_type='restaurant'):
+    location = get_current_location(address)
+    location = ','.join([str(i) for i in location])
     # Define the Places API endpoint
     url = f"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={location}&radius={radius}&type={place_type}&key={api_key}"
 
@@ -44,7 +73,7 @@ def search_places(location, radius=500, place_type='restaurant'):
         return None
 
 
-search_places('40.7580,-73.9855', 500, 'restaurant')
+search_places('15125 N Scottsdale Rd', 500, 'restaurant')
 
 
 # Mock response

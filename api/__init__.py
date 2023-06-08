@@ -51,7 +51,7 @@ df = df[df.n_tokens <= max_tokens].tail(top_n)
 df['embedding'] = df.combined.apply(lambda x: get_embeddings(x, embedding_model))
 
 df.to_csv('data/reviews_embeddings.csv')
-return str(len(df))
+# return str(len(df))
 # return str(df)
 
 

@@ -1,5 +1,6 @@
-source ./webapp/bin/activate
-python api/__init__.py
+source ./api/bin/activate
+pip install -r requirements.txt
+python3 api/__init__.py
 
 
 ```
