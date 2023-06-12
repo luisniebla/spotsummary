@@ -24,7 +24,8 @@ The guide https://platform.openai.com/docs/guides/embeddings/use-cases has a bun
 
 https://github.com/openai/openai-cookbook/blob/main/text_comparison_examples.md
 
-
+# Implementation Ideas
+1. Don't store any maps data, pass onto the model to create 
 
 # TODO
 
@@ -35,6 +36,12 @@ https://github.com/openai/openai-cookbook/blob/main/text_comparison_examples.md
 
 - OpenAI recommends fine-tuning versus embedding for text classification. When we're going to do tags, maybe we look into that later
 
+
+# Implemnation Ideas
+1. Do not store any google maps data, feed it into the embedding as part of the string input.
+2. Store the embeddings in a vector engine
+3. User input for search is used as input to the embedding model, then retrive distance from existing embeddings within the search area
+4. 
 
 ## Dev stuff
 - docker-compose
