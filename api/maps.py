@@ -6,6 +6,7 @@ import requests
 import firebase_admin
 from firebase_admin import firestore
 from firebase_admin import credentials
+from embeddings import embedding_from_string, print_recommendations_from_strings
 
 import openai
 
@@ -50,21 +51,24 @@ def get_place_info(place_id):
     if response.status_code == 200:
         # Load the JSON data from the response
         data = json.loads(response.text)
-        for review in data["result"]["reviews"]:
-            embedding = openai.Embedding.create(
-                input=review["text"], model="text-embedding-ada-002"
-            )["data"][0]["embedding"]
-
-            doc_ref = db.collection("locations").document(data["result"]["name"])
-            doc_ref.set({"embedding": embedding})
-            break
         return data
 
     else:
         return None
+    
+def spot_summary(places, search):
+    all_reviews = [search]
+    for place in places:
+        all_reviews.extend([r['text'] for r in place["result"]["reviews"]])
+    print('al_reviews', all_reviews)
+    indices = print_recommendations_from_strings(
+               all_reviews, 0
+            )
+    return indices
+            
 
 
-def search_places(address, radius=500, place_type="restaurant"):
+def search_places(address, search, radius=500, place_type="restaurant"):
     location = get_current_location(address)
     location = ",".join([str(i) for i in location])
     # Define the Places API endpoint
@@ -77,12 +81,15 @@ def search_places(address, radius=500, place_type="restaurant"):
     if response.status_code == 200:
         # Load the JSON data from the response
         data = json.loads(response.text)
+        places = []
         for item in data["results"]:
-            get_place_info(item["place_id"])
-
+            place_info = get_place_info(item["place_id"])
+            places.append(place_info)
+        indices = spot_summary(places, search)
+        print('in', indices)
         return data
     else:
         return None
 
 
-search_places("15125 N Scottsdale Rd", 500, "restaurant")
+search_places("15125 N Scottsdale Rd", 'Good margaritas', 500, "restaurant")

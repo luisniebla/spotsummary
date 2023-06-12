@@ -5,3 +5,5 @@ nextapp/node_modules
 nextapp/.next
 config.dev
 .env
+api/.DS_STORE
+api/data/recommendations_embeddings_cache.pkl

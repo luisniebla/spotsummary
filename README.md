@@ -24,8 +24,11 @@ The guide https://platform.openai.com/docs/guides/embeddings/use-cases has a bun
 
 https://github.com/openai/openai-cookbook/blob/main/text_comparison_examples.md
 
+- Can't really use embeddings because that would be for review to review. Like if you're looking at one review or location and you want to compare to others similar, it makes sense... Otherwise?
+
 # Implementation Ideas
-1. Don't store any maps data, pass onto the model to create 
+1. Don't store any maps data, pass onto the model to create the recommendation
+2. Store the embeddings in a vector engine
 
 # TODO
 
