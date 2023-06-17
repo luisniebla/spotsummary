@@ -56,15 +56,23 @@ def get_place_info(place_id):
     else:
         return None
     
+# Find a better way to map reviews to places
 def spot_summary(places, search):
     all_reviews = [search]
+    places_indexes = [None]
     for place in places:
+        places_indexes.extend([place["result"]["name"] for r in place['result']['reviews']])
         all_reviews.extend([r['text'] for r in place["result"]["reviews"]])
     print('al_reviews', all_reviews)
     indices = print_recommendations_from_strings(
-               all_reviews, 0
-            )
-    return indices
+       all_reviews, 0, 3
+    )
+    print('Top recommendations')
+    recommendations = []
+    for i in range(1, 4):
+        recommendations.append(places_indexes[indices[i]])
+    print(recommendations)
+    return recommendations
             
 
 
@@ -85,11 +93,11 @@ def search_places(address, search, radius=500, place_type="restaurant"):
         for item in data["results"]:
             place_info = get_place_info(item["place_id"])
             places.append(place_info)
-        indices = spot_summary(places, search)
-        print('in', indices)
-        return data
+        spots = spot_summary(places, search)
+        print('in', spots)
+        return spots
     else:
         return None
 
 
-search_places("15125 N Scottsdale Rd", 'Good margaritas', 500, "restaurant")
+search_places("15125 N Scottsdale Rd", 'Healthy food', 500, "restaurant")
