@@ -7,3 +7,5 @@ config.dev
 .env
 api/.DS_STORE
 api/data/recommendations_embeddings_cache.pkl
+api/__pycache__
+.DS_STORE

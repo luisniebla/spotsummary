@@ -2,6 +2,8 @@ source ./api/bin/activate
 pip install -r requirements.txt
 python3 api/__init__.py
 
+cd nextapp
+npm run dev
 
 ```
 curl http://localhost:5000/embeddings \
@@ -44,7 +46,7 @@ https://github.com/openai/openai-cookbook/blob/main/text_comparison_examples.md
 1. Do not store any google maps data, feed it into the embedding as part of the string input.
 2. Store the embeddings in a vector engine
 3. User input for search is used as input to the embedding model, then retrive distance from existing embeddings within the search area
-4. 
+4. Some sort of clustering for places.
 
 ## Dev stuff
 - docker-compose

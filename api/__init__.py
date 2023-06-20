@@ -4,8 +4,8 @@ import requests
 import tiktoken
 from dotenv import dotenv_values, load_dotenv
 from openai.embeddings_utils import get_embeddings
-from quart import Quart, request
-
+from quart import Quart, request, jsonify
+from maps import search_places
 app = Quart(__name__)
 app.config.from_prefixed_env()
 print(load_dotenv())
@@ -25,34 +25,41 @@ embedding_encoding = "cl100k_base"  # this the encoding for text-embedding-ada-0
 max_tokens = 8000  # the maximum for text-embedding-ada-002 is 8191
 
 
-# @app.post("/embeddings")
-# async def embeddings():
-input_datapath = 'api/data/Reviews.csv'
-df = pd.read_csv(input_datapath, index_col=0)
-df = df[['Time', 'ProductId', 'UserId', 'Score', 'Summary', 'Text']]
-df = df.dropna()
-df["combined"] = (
-    "Title: " + df.Summary.str.strip() + "; Content: " + df.Text.str.strip()
-)
-df.head(2)
+@app.post('/search')
+async def search():
+    data = await request.get_json()
+    return jsonify(search_places(**data))
+    # return search_places("15125 N Scottsdale Rd", 'Healthy food', 500, "restaurant")
 
-# subsample to 1k more recent reviews
-top_n = 10
-df = df.sort_values(by='Time', ascending=False).tail(top_n * 2)
-df.drop('Time', axis=1, inplace=True)
 
-encoding = tiktoken.get_encoding(embedding_encoding)
+@app.post("/embeddings")
+async def embeddings():
+    input_datapath = 'api/data/Reviews.csv'
+    df = pd.read_csv(input_datapath, index_col=0)
+    df = df[['Time', 'ProductId', 'UserId', 'Score', 'Summary', 'Text']]
+    df = df.dropna()
+    df["combined"] = (
+        "Title: " + df.Summary.str.strip() + "; Content: " + df.Text.str.strip()
+    )
+    df.head(2)
 
-# omit long reviews
-df['n_tokens'] = df.Text.apply(lambda x: len(encoding.encode(x)))
-df = df[df.n_tokens <= max_tokens].tail(top_n)
+    # subsample to 1k more recent reviews
+    top_n = 10
+    df = df.sort_values(by='Time', ascending=False).tail(top_n * 2)
+    df.drop('Time', axis=1, inplace=True)
 
-# response = openai.Embedding.create(model=embedding_model, input=batch)
-df['embedding'] = df.combined.apply(lambda x: get_embeddings(x, embedding_model))
+    encoding = tiktoken.get_encoding(embedding_encoding)
 
-df.to_csv('data/reviews_embeddings.csv')
-# return str(len(df))
-# return str(df)
+    # omit long reviews
+    df['n_tokens'] = df.Text.apply(lambda x: len(encoding.encode(x)))
+    df = df[df.n_tokens <= max_tokens].tail(top_n)
+
+    # response = openai.Embedding.create(model=embedding_model, input=batch)
+    df['embedding'] = df.combined.apply(lambda x: get_embeddings(x, embedding_model))
+
+    df.to_csv('data/reviews_embeddings.csv')
+    # return str(len(df))
+    return str(df)
 
 
 @app.post('/chat')

@@ -100,4 +100,4 @@ def search_places(address, search, radius=500, place_type="restaurant"):
         return None
 
 
-search_places("15125 N Scottsdale Rd", 'Healthy food', 500, "restaurant")
+# search_places("15125 N Scottsdale Rd", 'Healthy food', 500, "restaurant")
