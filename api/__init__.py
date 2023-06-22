@@ -2,12 +2,14 @@ import openai
 import pandas as pd
 import requests
 import tiktoken
+from quart_cors import cors
 from dotenv import dotenv_values, load_dotenv
 from openai.embeddings_utils import get_embeddings
 from quart import Quart, request, jsonify
 from maps import search_places
 app = Quart(__name__)
 app.config.from_prefixed_env()
+app = cors(app, allow_origin="http://localhost:3000")
 print(load_dotenv())
 config = dotenv_values('.env')
 
@@ -28,6 +30,7 @@ max_tokens = 8000  # the maximum for text-embedding-ada-002 is 8191
 @app.post('/search')
 async def search():
     data = await request.get_json()
+    print('data', data)
     return jsonify(search_places(**data))
     # return search_places("15125 N Scottsdale Rd", 'Healthy food', 500, "restaurant")
 

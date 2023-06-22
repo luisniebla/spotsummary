@@ -8,6 +8,9 @@ from openai.embeddings_utils import (
     indices_of_nearest_neighbors_from_distances,
 )
 
+import tiktoken
+embedding_encoding = "cl100k_base"
+
 # set path to embedding cache
 embedding_cache_path = "api/data/recommendations_embeddings_cache.pkl"
 
@@ -21,6 +24,9 @@ except FileNotFoundError:
 with open(embedding_cache_path, "wb") as embedding_cache_file:
     pickle.dump(embedding_cache, embedding_cache_file)
 
+encoding = tiktoken.get_encoding(embedding_encoding)
+
+
 # define a function to retrieve embeddings from the cache if present, and otherwise request via the API
 def embedding_from_string(
     string: str,
@@ -30,9 +36,14 @@ def embedding_from_string(
     """Return embedding of given string, using a cache to avoid recomputing."""
     # embedding_cache = {}
     print('string', string, model)
+    # n_tokens = len(encoding.encode(string))
     if (string, model) not in embedding_cache.keys():
         print('Getting new embedding')
-        embedding_cache[(string, model)] = get_embedding(string, model)
+        try:
+            embedding_cache[(string, model)] = get_embedding(string, model)
+        except Exception as e:
+            print('Exception getting embedding', e)
+            return None
         with open(embedding_cache_path, "wb") as embedding_cache_file:
             pickle.dump(embedding_cache, embedding_cache_file)
     return embedding_cache[(string, model)]
@@ -46,7 +57,11 @@ def print_recommendations_from_strings(
 ) -> list[int]:
     """Print out the k nearest neighbors of a given string."""
     # get embeddings for all strings
-    embeddings = [embedding_from_string(string, model=model) for string in strings]
+    embeddings = []
+    for string in strings:
+        embedding = embedding_from_string(string, model=model)
+        if embedding:
+            embeddings.append(embedding)
     # get the embedding of the source string
     query_embedding = embeddings[index_of_source_string]
     # get distances between the source embedding and other embeddings (function from embeddings_utils.py)
