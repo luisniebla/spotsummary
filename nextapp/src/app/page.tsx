@@ -1,6 +1,6 @@
 
 import Image from 'next/image'
-import AddressInput from './components/AddressInput'
+import Search from './components/Search'
 
 
 
@@ -12,7 +12,7 @@ export default async function Home() {
       <div className="flex h-screen border-black border-l">
         <div className="w-1/3 bg-white p-4">
           <h1 className="text-4xl mb-4 text-black">Find a Spot</h1>
-          <AddressInput />
+          <Search />
         </div>
         <div className="w-1/2">
           <div>Hello</div>
