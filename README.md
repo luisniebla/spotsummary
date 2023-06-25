@@ -1,9 +1,12 @@
 source ./api/bin/activate
 pip install -r requirements.txt
+gcloud auth application-default login
 python3 api/__init__.py
 
 cd nextapp
 npm run dev
+
+http://localhost:3000/
 
 ```
 curl http://localhost:5000/embeddings \

@@ -1,20 +1,21 @@
-import pandas as pd
 import pickle
+
+import pandas as pd
+import tiktoken
 from openai.embeddings_utils import (
-    get_embedding,
-    distances_from_embeddings,
-    tsne_components_from_embeddings,
     chart_from_components,
+    distances_from_embeddings,
+    get_embedding,
     indices_of_nearest_neighbors_from_distances,
+    tsne_components_from_embeddings,
 )
 
-import tiktoken
 embedding_encoding = "cl100k_base"
 
 # set path to embedding cache
 embedding_cache_path = "api/data/recommendations_embeddings_cache.pkl"
 
-EMBEDDING_MODEL ='text-embedding-ada-002'
+EMBEDDING_MODEL = 'text-embedding-ada-002'
 
 # load the cache if it exists, and save a copy to disk
 try:
@@ -29,9 +30,7 @@ encoding = tiktoken.get_encoding(embedding_encoding)
 
 # define a function to retrieve embeddings from the cache if present, and otherwise request via the API
 def embedding_from_string(
-    string: str,
-    model: str = EMBEDDING_MODEL,
-    embedding_cache=embedding_cache
+    string: str, model: str = EMBEDDING_MODEL, embedding_cache=embedding_cache
 ) -> list:
     """Return embedding of given string, using a cache to avoid recomputing."""
     # embedding_cache = {}
@@ -39,11 +38,7 @@ def embedding_from_string(
     # n_tokens = len(encoding.encode(string))
     if (string, model) not in embedding_cache.keys():
         print('Getting new embedding')
-        try:
-            embedding_cache[(string, model)] = get_embedding(string, model)
-        except Exception as e:
-            print('Exception getting embedding', e)
-            return None
+        embedding_cache[(string, model)] = get_embedding(string, model)
         with open(embedding_cache_path, "wb") as embedding_cache_file:
             pickle.dump(embedding_cache, embedding_cache_file)
     return embedding_cache[(string, model)]
@@ -65,9 +60,13 @@ def print_recommendations_from_strings(
     # get the embedding of the source string
     query_embedding = embeddings[index_of_source_string]
     # get distances between the source embedding and other embeddings (function from embeddings_utils.py)
-    distances = distances_from_embeddings(query_embedding, embeddings, distance_metric="cosine")
+    distances = distances_from_embeddings(
+        query_embedding, embeddings, distance_metric="cosine"
+    )
     # get indices of nearest neighbors (function from embeddings_utils.py)
-    indices_of_nearest_neighbors = indices_of_nearest_neighbors_from_distances(distances)
+    indices_of_nearest_neighbors = indices_of_nearest_neighbors_from_distances(
+        distances
+    )
 
     # print out source string
     query_string = strings[index_of_source_string]
