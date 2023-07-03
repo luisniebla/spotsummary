@@ -15,7 +15,7 @@ embedding_encoding = "cl100k_base"
 # set path to embedding cache
 embedding_cache_path = "api/data/recommendations_embeddings_cache.pkl"
 
-EMBEDDING_MODEL = 'text-embedding-ada-002'
+EMBEDDING_MODEL = "text-embedding-ada-002"
 
 # load the cache if it exists, and save a copy to disk
 try:
@@ -28,20 +28,26 @@ with open(embedding_cache_path, "wb") as embedding_cache_file:
 encoding = tiktoken.get_encoding(embedding_encoding)
 
 
+def remove_non_alnum(s):
+    return "".join(c for c in s if c.isalnum() or c.isspace())
+
+
 # define a function to retrieve embeddings from the cache if present, and otherwise request via the API
 def embedding_from_string(
     string: str, model: str = EMBEDDING_MODEL, embedding_cache=embedding_cache
 ) -> list:
     """Return embedding of given string, using a cache to avoid recomputing."""
     # embedding_cache = {}
-    print('string', string, model)
+    parsed_str = remove_non_alnum(string)
+    print(parsed_str)
+    print(len(parsed_str))
     # n_tokens = len(encoding.encode(string))
-    if (string, model) not in embedding_cache.keys():
-        print('Getting new embedding')
-        embedding_cache[(string, model)] = get_embedding(string, model)
+    if (parsed_str, model) not in embedding_cache.keys():
+        print("Getting new embedding")
+        embedding_cache[(parsed_str, model)] = get_embedding(parsed_str, model)
         with open(embedding_cache_path, "wb") as embedding_cache_file:
             pickle.dump(embedding_cache, embedding_cache_file)
-    return embedding_cache[(string, model)]
+    return embedding_cache[(parsed_str, model)]
 
 
 def print_recommendations_from_strings(

@@ -2,14 +2,13 @@ import openai
 import pandas as pd
 import requests
 import tiktoken
-from quart_cors import cors
 from dotenv import dotenv_values, load_dotenv
 from openai.embeddings_utils import get_embeddings
-from quart import Quart, request, jsonify
-from maps import search_places
-app = Quart(__name__)
-app.config.from_prefixed_env()
-app = cors(app, allow_origin="http://localhost:3000")
+from quart import Quart, jsonify, request
+
+from .app import app
+from .maps import search_places
+
 print(load_dotenv())
 config = dotenv_values('.env')
 

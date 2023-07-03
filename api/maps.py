@@ -1,18 +1,18 @@
 # google maps api
 
 import json
-import geopy
-import requests
+
 import firebase_admin
-from firebase_admin import firestore
-from firebase_admin import credentials
-from embeddings import embedding_from_string, print_recommendations_from_strings
-
+import geopy
 import openai
+import requests
+from firebase_admin import credentials, firestore
 
+from .app import app
+from .embeddings import embedding_from_string, print_recommendations_from_strings
 
 cred = credentials.ApplicationDefault()
-app = firebase_admin.initialize_app(cred)
+firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 
@@ -31,13 +31,20 @@ config = dotenv_values(".env")
 api_key = config["MAPS_API_KEY"]
 openai.api_key = config["OPENAI_SECRET"]
 
+from quart import Quart, jsonify, request
+
 
 def get_current_location(address):
     location = geopy.geocoders.Nominatim(user_agent="spotsum").geocode(address)
     return [location.latitude, location.longitude]
 
 
-#
+@app.route('/geo', methods=['GET'])
+async def get_geo():
+    address = request.args.get('address')
+    print('address', address)
+    return get_current_location(address)
+    # return search_places("15125 N Scottsdale Rd", 'Healthy food', 500, "restaurant")
 
 
 def get_place_info(place_id):
@@ -55,25 +62,30 @@ def get_place_info(place_id):
 
     else:
         return None
-    
+
+
+def remove_non_alnum(s):
+    return "".join(c for c in s if c.isalnum() or c.isspace())
+
+
 # Find a better way to map reviews to places
 def spot_summary(places, search):
     all_reviews = [search]
     places_indexes = [None]
     for place in places:
-        places_indexes.extend([place["result"]["name"] for r in place['result']['reviews']])
-        all_reviews.extend([r['text'] for r in place["result"]["reviews"]])
+        if place['result']['reviews']:
+            for review in place['result']['reviews']:
+                if review['text']:
+                    places_indexes.append(place["result"]["name"])
+                    all_reviews.append(review['text'])
     print('al_reviews', all_reviews)
-    indices = print_recommendations_from_strings(
-       all_reviews, 0, 3
-    )
+    indices = print_recommendations_from_strings(all_reviews, 0, 3)
     print('Top recommendations')
     recommendations = []
     for i in range(1, 4):
         recommendations.append(places_indexes[indices[i]])
     print(recommendations)
     return recommendations
-            
 
 
 def search_places(address, search, radius=500, place_type="restaurant"):
