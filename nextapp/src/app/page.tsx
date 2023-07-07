@@ -1,4 +1,5 @@
 
+// import 'dotenv/config'
 import Image from 'next/image'
 import Search from './components/Search'
 import Map from './components/Map'
@@ -6,6 +7,8 @@ import Map from './components/Map'
 
 export default async function Home() {
   // const data = await getData()
+  // console.log(process.env.REACT_APP_API_KEY)
+  console.log('NEXT_PUBLIC_KEY', process.env.NEXT_PUBLIC_KEY)
   return (
     <body>
 

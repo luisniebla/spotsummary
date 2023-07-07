@@ -11,3 +11,4 @@ api/__pycache__
 .DS_STORE
 api/lib
 api/bin
+.env.local
