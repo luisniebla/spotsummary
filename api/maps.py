@@ -8,8 +8,9 @@ import openai
 import requests
 from firebase_admin import credentials, firestore
 
-from .app import app
-from .embeddings import embedding_from_string, print_recommendations_from_strings
+import app
+import embeddings
+# print_recommendations_from_strings
 
 cred = credentials.ApplicationDefault()
 firebase_admin.initialize_app(cred)
@@ -34,6 +35,13 @@ openai.api_key = config["OPENAI_SECRET"]
 from quart import Quart, jsonify, request
 
 
+@app.app.post('/search')
+async def search():
+    data = await request.get_json()
+    print('data', data)
+    return jsonify(search_places(**data))
+    # return search_places("15125 N Scottsdale Rd", 'Healthy food', 500, "restaurant")
+    
 def get_current_location(address):
     location = geopy.geocoders.Nominatim(user_agent="spotsum").geocode(address)
     return [location.latitude, location.longitude]
@@ -79,7 +87,7 @@ def spot_summary(places, search):
                     places_indexes.append(place["result"]["name"])
                     all_reviews.append(review['text'])
     print('al_reviews', all_reviews)
-    indices = print_recommendations_from_strings(all_reviews, 0, 3)
+    indices = embeddings.print_recommendations_from_strings(all_reviews, 0, 3)
     print('Top recommendations')
     recommendations = []
     for i in range(1, 4):

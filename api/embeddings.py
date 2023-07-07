@@ -9,6 +9,7 @@ from openai.embeddings_utils import (
     indices_of_nearest_neighbors_from_distances,
     tsne_components_from_embeddings,
 )
+import app
 
 embedding_encoding = "cl100k_base"
 
@@ -16,6 +17,35 @@ embedding_encoding = "cl100k_base"
 embedding_cache_path = "api/data/recommendations_embeddings_cache.pkl"
 
 EMBEDDING_MODEL = "text-embedding-ada-002"
+
+@app.post("/embeddings")
+async def embeddings():
+    input_datapath = 'api/data/Reviews.csv'
+    df = pd.read_csv(input_datapath, index_col=0)
+    df = df[['Time', 'ProductId', 'UserId', 'Score', 'Summary', 'Text']]
+    df = df.dropna()
+    df["combined"] = (
+        "Title: " + df.Summary.str.strip() + "; Content: " + df.Text.str.strip()
+    )
+    df.head(2)
+
+    # subsample to 1k more recent reviews
+    top_n = 10
+    df = df.sort_values(by='Time', ascending=False).tail(top_n * 2)
+    df.drop('Time', axis=1, inplace=True)
+
+    encoding = tiktoken.get_encoding(embedding_encoding)
+
+    # omit long reviews
+    df['n_tokens'] = df.Text.apply(lambda x: len(encoding.encode(x)))
+    df = df[df.n_tokens <= max_tokens].tail(top_n)
+
+    # response = openai.Embedding.create(model=embedding_model, input=batch)
+    df['embedding'] = df.combined.apply(lambda x: get_embeddings(x, embedding_model))
+
+    df.to_csv('data/reviews_embeddings.csv')
+    # return str(len(df))
+    return str(df)
 
 # load the cache if it exists, and save a copy to disk
 try:

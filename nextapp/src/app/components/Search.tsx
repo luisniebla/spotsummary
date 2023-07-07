@@ -8,6 +8,7 @@ function onSubmit(setResult) {
     // console.log(address, search)
     // address, search, radius=500, place_type
     console.log(values)
+    setResult([])
     const res = await fetch('http://127.0.0.1:5000/search', {headers: {'Content-Type': 'application/json'}, method: 'POST', body: JSON.stringify(values)})
 
 
@@ -15,7 +16,7 @@ function onSubmit(setResult) {
   }
 }
 
-const fancyInput = 'shadow-lg block w-full rounded-md border-0 py-1.5 pl-7 pr-5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+const fancyInput = 'shadow-lg block w-full rounded-md border-0 py-1.5 pl-7 pr-5 text-gray-900 ring-1 ring-inset ring-gray-300 text-black placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
 export default function Search({}) {
     const [result, setResult] = useState([])
     console.log(result)
@@ -31,6 +32,7 @@ export default function Search({}) {
                     id="address"
                     name="address"
                     required
+                    className={fancyInput}
                     component="input"
                     onBlur={() => console.log('blur')}
                 />
