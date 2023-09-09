@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2F29E98E2A0E016D000EF279 /* SpotSummaryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F29E98D2A0E016D000EF279 /* SpotSummaryApp.swift */; };
-		2F29E9902A0E016D000EF279 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F29E98F2A0E016D000EF279 /* ContentView.swift */; };
+		2F29E9902A0E016D000EF279 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F29E98F2A0E016D000EF279 /* MapView.swift */; };
 		2F29E9922A0E016E000EF279 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2F29E9912A0E016E000EF279 /* Assets.xcassets */; };
 		2F29E9962A0E016E000EF279 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2F29E9952A0E016E000EF279 /* Preview Assets.xcassets */; };
 		2F29E9A02A0E016E000EF279 /* SpotSummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F29E99F2A0E016E000EF279 /* SpotSummaryTests.swift */; };
@@ -36,7 +36,7 @@
 /* Begin PBXFileReference section */
 		2F29E98A2A0E016D000EF279 /* SpotSummary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpotSummary.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F29E98D2A0E016D000EF279 /* SpotSummaryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotSummaryApp.swift; sourceTree = "<group>"; };
-		2F29E98F2A0E016D000EF279 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		2F29E98F2A0E016D000EF279 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		2F29E9912A0E016E000EF279 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2F29E9932A0E016E000EF279 /* SpotSummary.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SpotSummary.entitlements; sourceTree = "<group>"; };
 		2F29E9952A0E016E000EF279 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -45,6 +45,7 @@
 		2F29E9A52A0E016E000EF279 /* SpotSummaryUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpotSummaryUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F29E9A92A0E016E000EF279 /* SpotSummaryUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotSummaryUITests.swift; sourceTree = "<group>"; };
 		2F29E9AB2A0E016E000EF279 /* SpotSummaryUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotSummaryUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		2F54DBB12AAC2C96001B2B4A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,8 +96,9 @@
 		2F29E98C2A0E016D000EF279 /* SpotSummary */ = {
 			isa = PBXGroup;
 			children = (
+				2F54DBB12AAC2C96001B2B4A /* Info.plist */,
 				2F29E98D2A0E016D000EF279 /* SpotSummaryApp.swift */,
-				2F29E98F2A0E016D000EF279 /* ContentView.swift */,
+				2F29E98F2A0E016D000EF279 /* MapView.swift */,
 				2F29E9912A0E016E000EF279 /* Assets.xcassets */,
 				2F29E9932A0E016E000EF279 /* SpotSummary.entitlements */,
 				2F29E9942A0E016E000EF279 /* Preview Content */,
@@ -259,7 +261,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2F29E9902A0E016D000EF279 /* ContentView.swift in Sources */,
+				2F29E9902A0E016D000EF279 /* MapView.swift in Sources */,
 				2F29E98E2A0E016D000EF279 /* SpotSummaryApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -417,6 +419,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"SpotSummary/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SpotSummary/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -453,6 +456,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"SpotSummary/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SpotSummary/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
